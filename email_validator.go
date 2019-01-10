@@ -12,12 +12,12 @@ import (
 )
 
 // ErrorFormat - ошибка формата записи
+// ErrorRequest - email не существует
 var (
 	ErrorFormat = errors.New("format is not valid")
 	ErrorDomain = errors.New("domain is not valid")
+	ErrorRequest = errors.New("email is not exist")
 )
-
-type ErrorRequest error
 
 // Валидатор Email адресов
 // proxy - объект прокси сервера, через который будет происходить соединение при тестовой отправки, если nil,
@@ -132,7 +132,7 @@ func (v *EmailValidator) CheckRequest(email string, mx *net.MX) error {
 
 	err = client.Rcpt(email)
 	if err != nil {
-		return ErrorRequest(err)
+		return ErrorRequest
 	}
 
 	return nil
