@@ -3,12 +3,15 @@ package email_validator
 import (
 	"bitbucket.org/EmptyShadow/smtp_use_proxy"
 	"errors"
+	"net"
 	"regexp"
+	"strings"
 )
 
 // ErrorFormat - ошибка формата записи
 var (
 	ErrorFormat = errors.New("format is not valid")
+	ErrorDomain = errors.New("domain is not valid")
 )
 
 // Валидатор Email адресов
@@ -56,4 +59,35 @@ func (v *EmailValidator) CheckFormat(email string) (error) {
 	}
 
 	return nil
+}
+
+// Проверка валидности домена
+// email - адрес, домен которого требуется проверить
+//
+// Check domain
+// email - address whose domain want to check
+func (v *EmailValidator) CheckDomain(email string) ([]*net.MX, error) {
+	_, host := splitUserAndHost(email)
+
+	mx, err := net.LookupMX(host)
+	if err != nil {
+		return nil, err
+	}
+
+	if mx == nil || len(mx) == 0 {
+		return nil, ErrorDomain
+	}
+
+	return mx, nil
+}
+
+
+// Разбиение email адреса на аккаунт и хост
+//
+// Splitting email address into account and host
+func splitUserAndHost(email string) (account, host string) {
+	i := strings.LastIndexByte(email, '@')
+	account = email[:i]
+	host = email[i + 1:]
+	return
 }
