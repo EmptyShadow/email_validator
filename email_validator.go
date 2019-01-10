@@ -137,3 +137,26 @@ func (v *EmailValidator) CheckRequest(email string, mx *net.MX) error {
 
 	return nil
 }
+
+// Проверка валидности email по всем этапам:
+// 1. Формат
+// 2. Домен
+// 3. Существование
+//
+// Check email validity at all stages:
+// 1. Format
+// 2. Domain
+// 3. Existence
+func (v *EmailValidator) CheckEmail(email string) (err error) {
+	var mx []*net.MX
+
+	if err = v.CheckEmail(email); err == nil {
+		if mx, err = v.CheckDomain(email); err == nil {
+			if err = v.CheckRequest(email, mx[0]); err == nil {
+				return nil
+			}
+		}
+	}
+
+	return err
+}
