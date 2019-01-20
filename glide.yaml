@@ -1,0 +1,4 @@
+package: bitbucket.org/EmptyShadow/email_validator
+import:
+- package: bitbucket.org/EmptyShadow/smtp_use_proxy
+  version: ^1.0.3
