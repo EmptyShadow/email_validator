@@ -76,7 +76,7 @@ func (v *EmailValidator) CheckDomain(email string) ([]*net.MX, error) {
 
 	mx, err := net.LookupMX(host)
 	if err != nil {
-		return nil, err
+		return nil, ErrorDomain
 	}
 
 	if mx == nil || len(mx) == 0 {
@@ -150,7 +150,7 @@ func (v *EmailValidator) CheckRequest(email string, mx *net.MX) error {
 func (v *EmailValidator) CheckEmail(email string) (err error) {
 	var mx []*net.MX
 
-	if err = v.CheckEmail(email); err == nil {
+	if err = v.CheckFormat(email); err == nil {
 		if mx, err = v.CheckDomain(email); err == nil {
 			if err = v.CheckRequest(email, mx[0]); err == nil {
 				return nil
