@@ -71,7 +71,7 @@ func (v *EmailValidator) CheckDomain(email string) ([]*net.MX, error) {
 
 	mx, err := net.LookupMX(host)
 	if err != nil {
-		return nil, err
+		return nil, ErrorDomain
 	}
 
 	if mx == nil || len(mx) == 0 {
